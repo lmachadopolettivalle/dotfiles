@@ -1,0 +1,115 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+
+version: 2
+console_title_template: "{{.Folder}}"
+final_space: true
+pwd: osc99
+disable_cursor_positioning: true
+
+palette:
+  red:    "#A00000"
+  blue:   "#1070F0"
+  green:  "#40B060"
+  yellow: "#C0C040"
+  brown:  "#402020"
+  dark:   "#404040"
+  gray:   "#808080"
+  white:  "#F0F0F0"
+  black:  "#101010"
+
+blocks:
+- type: prompt
+  alignment: left
+  segments:
+
+  - type: session
+    template: "{{if .SSHSession}}󰌘 {{.HostName}}{{end}}"    # \uF233
+    foreground: "p:gray"
+    background: "p:dark"
+    style: diamond
+    leading_diamond: ""
+    trailing_diamond: "█"               # \u2588
+
+  - type: python
+    template: " {{.Venv}}"             # \uE235
+    properties:
+      fetch_version: false
+    foreground: "p:yellow"
+    background: "p:dark"
+    style: diamond
+    leading_diamond: ""
+    trailing_diamond: "█"               # \u2588
+
+  - type: java
+    template: "{{$ivy := glob \"ivy.xml\"}}{{$ant := glob \"build.xml\"}}{{$java := glob \"*.java\"}}{{if or $ivy $ant $java }} {{.Full}}{{end}}"
+                                        # \uE256
+    properties:
+      display_mode: always
+    foreground: "p:yellow"
+    background: "p:dark"
+    style: diamond
+    leading_diamond: ""
+    trailing_diamond: "█"               # \u2588
+
+  - type: git
+    template: "{{.UpstreamIcon}}{{.HEAD}}"
+    properties:
+      fetch_upstream_icon: true
+      branch_icon: ""
+    foreground: "p:green"
+    background: "p:dark"
+    style: diamond
+    leading_diamond: ""
+    trailing_diamond: "█"               # \u2588
+
+  - type: root
+    template: " "
+    foreground: "p:red"
+    background: "p:dark"
+    style: diamond
+    leading_diamond: ""
+    trailing_diamond: "█"               # \u2588
+
+  - type: path
+    # \uF07C
+    template: >-
+      {{
+        $last := last (regexSplit "[\\\\/]" .Path -1)
+      }}{{
+        $first := trimSuffix $last .Path
+      }} {{$first}}<b>{{$last}}</b>
+    foreground: "p:blue"
+    background: "p:dark"
+    properties:
+      style: powerlevel
+      max_width: 50
+    style: diamond
+    leading_diamond: ""
+    trailing_diamond: ""               # \uE0b0
+
+- type: prompt
+  alignment: right
+  segments:
+  - type: executiontime
+    template: "{{.FormattedMs}}  "     # \uF252
+    foreground: "p:gray"
+    background: "p:dark"
+    style: diamond
+    leading_diamond: ""                # \uE0B6
+    trailing_diamond: ""               # \uE0B4
+    properties:
+      threshold: 5000
+      style: austin
+
+- type: prompt
+  alignment: left
+  newline: true
+  segments:
+  - type: exit
+    template: "❯"
+    foreground_templates:
+    - "{{if .Code}}p:red{{else}}p:green{{end}}"
+    properties:
+      always_enabled: true
+    style: plain
+
